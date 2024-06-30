@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户注册</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://w.wallhaven.cc/full/95/wallhaven-95j19x.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .register-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .form-input {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-bottom: 2px solid #5f9ea0;
+            background: transparent;
+        }
+        .form-label {
+            display: block;
+            text-align: left;
+            margin-left: 5%;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+        .submit-button {
+            width: 90%;
+            padding: 10px;
+            background-color: #5f9ea0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-button:hover {
+            background-color: #529292;
+        }
+        .form-footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #666;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>用户注册</h2>
+        <!-- Display messages from Django messaging framework -->
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div>{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form action="{% url 'register' %}" method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" name="{{ field.name }}" class="form-input {% if field.errors %}is-invalid{% endif %}" value="{{ field.value|default_if_none:"" }}" required>
+                {% for error in field.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+            <button type="submit" class="submit-button">注册</button>
+        </form>
+        <div class="form-footer">
+            已有账号？<a href="{% url 'login' %}">立即登录</a>
+        </div>
+    </div>
+
+</body>
+</html>
+
